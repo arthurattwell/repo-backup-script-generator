@@ -21,6 +21,7 @@ function listRepos(data) {
 
 // Generate the shell script/batch file text
 function generateScript(data, entity, outputContainer) {
+    outputContainer.innerHTML += "mkdir " + entity + "<br>";
     data.forEach(function(data) {
         outputContainer.innerHTML += "mkdir " + data.full_name;
         outputContainer.innerHTML += " && cd " + entity;
