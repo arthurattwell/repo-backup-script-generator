@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>myrepos setup-script generator</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="https://arthurattwell.github.io/halfdecent/halfdecent.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+<body>
+
+    <h1>myrepos setup-script generator</h1>
+
+    <p>If you use <a href="http://myrepos.branchable.com/">myrepos</a>, you know it's great: with one command myrepos updates <em>all</em> your local repos. But, if you have a lot of repos, registering them with <code>mr register</code> one by one is a pain. And if you back up all your repos somewhere, you can forget which repos you've added the backup. To set up a thorough local backup, I needed a script that clones all of my repos and registers them with myrepos in one go.</p>
+
+    <p>This page generates the content for a shell script or batch file that I use to clone all of my GitHub repos and register them with myrepos. It may work for you, too.</p>
+
+    <ol>
+        <li>To get your organisation's repos, enter its GitHub name below. To get your personal repos, enter your GitHub username.</li>
+        <li>If you want to include private repos, you'll need a GitHub <a href="https://github.com/settings/tokens">Personal API token</a> with full <code>repo</code> scope.</li>
+        <li>Click 'Generate'.</li>
+        <li>To add another organisation's or user's repos, add their details to the form and click 'Generate' again.</li>
+        <li>Copy and paste the text into a <code>.sh</code> or <code>.bat</code> file.</li>
+        <li>Run that file where you want your repos. They will be cloned there in organisation folders.</li>
+    </ol>
+
+    <p>Suggestions? <a href="https://github.com/arthurattwell/myrepos-setup">Find this on GitHub</a>.</p>
+
+    <hr>
+
+    <form>
+
+        <div>
+            <input id="select-organisation" type="radio" name="select-organisation-or-user" value="select-organisation" checked>
+            <label for="select-organisation">Organisation</label>
+            <input id="input-organisation" type="text" name="input-organisation" placeholder="myorgname">
+        </div>
+
+        <div>
+            <input id="select-user" type="radio" name="select-organisation-or-user" value="select-user">
+            <label for="select-user">Username</label>
+            <input id="input-user" type="text" name="input-user" placeholder="myusername">
+        </div>
+
+        <br>
+
+        <label for="apitoken">Personal API token (if you want private repos, too)</label>
+        <input id="apitoken" type="text" name="apitoken" placeholder="jfh8734fiuhv795ub9f7h857hg4u5bg985hg983g">
+
+    </form>
+
+    <button id="generate" type="button" onclick="generate()">Generate</button>
+    <button id="clearOutput" type="button" onclick="clearOutput();">Clear</button>
+
+    <div id="output-wrapper">
+        <pre id="repos"></pre>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
