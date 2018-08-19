@@ -21,10 +21,10 @@ function listRepos(data) {
 
 // Generate the shell script/batch file text
 function generateScript(data, entity, outputContainer) {
-    outputContainer.innerHTML += "mkdir " + entity + "<br>";
+    outputContainer.innerHTML += "mkdir " + data[0].owner.login + "<br>";
     data.forEach(function(data) {
         outputContainer.innerHTML += "mkdir " + data.full_name;
-        outputContainer.innerHTML += " && cd " + entity;
+        outputContainer.innerHTML += " && cd " + data.owner.login;
         outputContainer.innerHTML += " && git clone git@github.com:" + data.full_name + ".git";
         outputContainer.innerHTML += " && cd " + data.name;
         outputContainer.innerHTML += " && mr register";
