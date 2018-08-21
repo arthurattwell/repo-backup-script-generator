@@ -23,8 +23,9 @@ function listRepos(data) {
 function generateScript(data, entity, outputContainer) {
     outputContainer.innerHTML += "mkdir " + data[0].owner.login + "<br>";
     data.forEach(function(data) {
-        outputContainer.innerHTML += "mkdir " + data.full_name;
-        outputContainer.innerHTML += " && cd " + data.owner.login;
+        outputContainer.innerHTML += "cd " + data.owner.login;
+        outputContainer.innerHTML += " && mkdir " + data.name;
+        outputContainer.innerHTML += " && cd ..";
         outputContainer.innerHTML += " && git clone git@github.com:" + data.full_name + ".git";
         outputContainer.innerHTML += " && cd " + data.name;
         outputContainer.innerHTML += " && mr register";
