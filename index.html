@@ -36,22 +36,28 @@
 
     <form>
 
-        <div>
-            <input id="select-organisation" type="radio" name="select-organisation-or-user" value="select-organisation" checked>
-            <label for="select-organisation">Organisation</label>
-            <input id="input-organisation" type="text" name="input-organisation" placeholder="myorgname">
+        <div class="section-select-entity">
+
+            <div>
+                <input id="select-organisation" type="radio" name="select-organisation-or-user" value="select-organisation" checked>
+                <label for="select-organisation">Organisation</label>
+                <input id="input-organisation" type="text" name="input-organisation" placeholder="myorgname">
+            </div>
+
+            <div>
+                <input id="select-user" type="radio" name="select-organisation-or-user" value="select-user">
+                <label for="select-user">User</label>
+                <input id="input-user" type="text" name="input-user" placeholder="myusername">
+            </div>
+
         </div>
 
-        <div>
-            <input id="select-user" type="radio" name="select-organisation-or-user" value="select-user">
-            <label for="select-user">Username</label>
-            <input id="input-user" type="text" name="input-user" placeholder="myusername">
+        <div class="section-api-token">
+
+            <label for="apitoken"><a href="https://github.com/settings/tokens">Personal API token</a> (for private repos)</label>
+            <input id="apitoken" type="text" name="apitoken" placeholder="jfh8734fiuhv795ub9f7h857hg4u5bg985hg983g">
+
         </div>
-
-        <br>
-
-        <label for="apitoken">Personal API token (if you want private repos, too)</label>
-        <input id="apitoken" type="text" name="apitoken" placeholder="jfh8734fiuhv795ub9f7h857hg4u5bg985hg983g">
 
     </form>
 

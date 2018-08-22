@@ -6,6 +6,10 @@ pre:empty {
     display: none;
 }
 
+[class^="section-"] {
+    margin-bottom: 1em;
+}
+
 #input-organisation,
 #input-user {
     display: none;
