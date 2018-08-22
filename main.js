@@ -26,7 +26,6 @@ function generateScript(data, entity, outputContainer) {
     data.forEach(function(data) {
         outputContainer.innerHTML += "cd " + data.owner.login;
         outputContainer.innerHTML += " && git clone git@github.com:" + data.full_name + ".git";
-        outputContainer.innerHTML += " 2> /dev/null"; // if an error, e.g. folder exists, suppress error message
         outputContainer.innerHTML += " || echo 'A " + data.name + " folder exists."
         outputContainer.innerHTML += " We will not clone it, but will register the existing folder.'";
         outputContainer.innerHTML += " && cd " + data.name;
