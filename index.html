@@ -15,22 +15,32 @@
 
     <h1>myrepos setup-script generator</h1>
 
-    <p>If you use <a href="http://myrepos.branchable.com/">myrepos</a>, you know it's great: with one command myrepos updates <em>all</em> your local repos. But, if you have a lot of repos, registering them with <code>mr register</code> one by one is a pain. And if you back up all your repos somewhere, you can forget which repos you've added the backup. To set up a thorough local backup, I needed a script that clones all of my repos and registers them with myrepos in one go.</p>
+    <p>If you use <a href="http://myrepos.branchable.com/">myrepos</a>, you know it's great: once you've cloned your repos and registered them, with one command myrepos updates <em>all</em> your local repos.</p>
 
-    <p>This page generates the content for a shell script or batch file that I use to clone all of my GitHub repos and register them with myrepos. It may work for you, too.</p>
+    <p>But, if you're using it to back up all your repos somewhere, and you have a lot of them, cloning and registering them one by one is a pain. And you can forget which repos you've cloned or registered.</p>
 
-    <p>Note: this only works for up to 100 repos.</p>
+    <p>To maintain a thorough local backup, I needed a shell script that would clone all of my repos and register them with myrepos in one go. And I needed to be able to get an up-to-date version of that script, that included any new repos, at any time.</p>
+
+    <p>This page generates that script. It may work for you, too.</p>
+
+    <p>Note: currently, this only works for GitHub repos and <a href="https://github.com/arthurattwell/myrepos-setup/issues/1">up to 100 repos</a> per user or organisation.</p>
+
+    <h2>Usage</h2>
 
     <ol>
+        <li>Install <a href="http://myrepos.branchable.com/">myrepos</a>.</li>
         <li>To get your organisation's repos, enter its GitHub name below. To get your personal repos, enter your GitHub username.</li>
         <li>If you want to include private repos, you'll need a GitHub <a href="https://github.com/settings/tokens">Personal API token</a> with full <code>repo</code> scope.</li>
         <li>Click 'Generate'.</li>
         <li>To add another organisation's or user's repos, add their details to the form and click 'Generate' again.</li>
         <li>Copy and paste the text into a <code>.sh</code> or <code>.bat</code> file.</li>
         <li>Run that file where you want your repos. They will be cloned there in organisation folders. You do need to be <a href="https://help.github.com/articles/connecting-to-github-with-ssh/">set up to connect to GitHub with ssh automatically</a>.</li>
+        <li>Once that's done, to update all your repos with myrepos, run <code>mr update</code> in your home folder.</li>
     </ol>
 
-    <p>Suggestions? <a href="https://github.com/arthurattwell/myrepos-setup">Find this on GitHub</a>.</p>
+    <h2>Suggestions?</h2>
+
+    <p><a href="https://github.com/arthurattwell/myrepos-setup">Find this on GitHub</a>.</p>
 
     <hr>
 
