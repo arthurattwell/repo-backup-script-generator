@@ -22,9 +22,10 @@ function generateScript(data, outputContainer) {
     data.forEach(function (data) {
         outputContainer.innerHTML += "cd " + data.owner.login;
         outputContainer.innerHTML += " && git clone git@github.com:" + data.full_name + ".git";
-        outputContainer.innerHTML += " || echo 'A " + data.name + " folder exists.";
+        outputContainer.innerHTML += " || echo 'The " + data.name + " folder exists. Updating.'";
+        outputContainer.innerHTML += " && cd " + data.name + " && git pull && cd ../";
         if (myreposRegister) {
-            outputContainer.innerHTML += " We will not clone it, but will register the existing folder.'";
+            outputContainer.innerHTML += " echo 'We will not clone it, but will register the existing folder.'";
             outputContainer.innerHTML += " && cd " + data.name;
             outputContainer.innerHTML += " && mr register";
             outputContainer.innerHTML += " && cd ../";
