@@ -94,7 +94,7 @@ function clearOutput() {
 }
 
 // Listen for 'Enter' in the form
-var fields = document.querySelectorAll("#input-organisation, #input-user");
+var fields = document.querySelectorAll("#input-organisation, #input-user, #apitoken");
 fields.forEach(function (field) {
     'use strict';
     field.addEventListener("keyup", function (event) {
