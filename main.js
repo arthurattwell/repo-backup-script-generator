@@ -1,11 +1,6 @@
 /*jslint browser*/
 /*globals*/
 
-// Options
-
-// Register with myrepos?
-var myreposRegister = false;
-
 // Put a list of repos in the console for reference
 function listRepos(data) {
     'use strict';
@@ -20,18 +15,14 @@ function generateScript(data, outputContainer) {
     // Make the entity directory if it doesn't exist.
     outputContainer.innerHTML += "mkdir -p " + data[0].owner.login + "<br>";
     data.forEach(function (data) {
-        outputContainer.innerHTML += "cd " + data.owner.login;
-        outputContainer.innerHTML += " && git clone git@github.com:" + data.full_name + ".git";
-        outputContainer.innerHTML += " || echo 'The " + data.name + " folder exists. Updating.'";
-        outputContainer.innerHTML += " && cd " + data.name + " && git pull && cd ../";
-        if (myreposRegister) {
-            outputContainer.innerHTML += " echo 'We will not clone it, but will register the existing folder.'";
-            outputContainer.innerHTML += " && cd " + data.name;
-            outputContainer.innerHTML += " && mr register";
-            outputContainer.innerHTML += " && cd ../";
-        }
-        outputContainer.innerHTML += " && cd ../";
-        outputContainer.innerHTML += "<br>";
+        outputContainer.innerHTML += "cd " + data.owner.login + "\n";
+        outputContainer.innerHTML += "git clone git@github.com:" + data.full_name + ".git";
+        outputContainer.innerHTML += " || echo 'The " + data.name + " folder exists. Updating.'\n";
+        outputContainer.innerHTML += "if [ -d " + data.name + " ]; then\n";
+        outputContainer.innerHTML += "    cd " + data.name + "\n";
+        outputContainer.innerHTML += "    git pull\n";
+        outputContainer.innerHTML += "fi\n";
+        outputContainer.innerHTML += "cd $location\n";
     });
 }
 
@@ -59,6 +50,10 @@ function generate() {
 
     // Where to put our output
     var outputContainer = document.getElementById("repos");
+
+    // Add the once-only location variable.
+    // (We don't want this repeating with every 'Generate'.)
+    outputContainer.innerHTML += "location=$(pwd)\n";
 
     // Get the API token
     var token = document.getElementById("apitoken").value;
