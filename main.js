@@ -109,8 +109,14 @@ fields.forEach(function (field) {
 
 // Listen for 'Clear output' in the form
 var clearOutputButton = document.querySelector("#clearOutput");
-clearOutputButton.addEventListener("click", clearOutput());
+clearOutputButton.addEventListener("click", function () {
+    'use strict';
+    clearOutput();
+});
 
 // Listen for 'Generate output' in the form
 var generateButton = document.querySelector("#generate");
-generateButton.addEventListener("click", generate());
+generateButton.addEventListener("click", function () {
+    'use strict';
+    generate();
+});
