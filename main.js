@@ -40,6 +40,7 @@ function getJSON(url, callback) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.responseType = "json";
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.onload = function () {
         var status = xhr.status;
         if (status === 200) {
