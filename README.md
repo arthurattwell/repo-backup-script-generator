@@ -2,7 +2,7 @@
 
 Generates a script for backing up all your GitHub repos. Clunky, but it works. tested only with Ubuntu. YMMV on Mac. Not for Windows.
 
-Use it at [arthurattwell.github.io/myrepos-setup](http://arthurattwell.github.io/myrepos-setup), where there are more instructions.
+Use it at [arthurattwell.github.io/repo-backup-script-generator/](https://arthurattwell.github.io/repo-backup-script-generator/), where there are more instructions.
 
 ## Run locally
 
