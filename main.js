@@ -1,20 +1,26 @@
-/*jslint browser*/
-/*globals*/
+/*jslint browser, for */
+/*globals console */
 
-// Put a list of repos in the console for reference
-function listRepos(data) {
-    'use strict';
-    data.forEach(function (data) {
-        console.log(data);
-    });
-}
+// Empty array, ready for repo data
+var repoData = [];
 
 // Generate the shell script text
-function generateScript(data, outputContainer) {
+function generateScript() {
     'use strict';
+
+    // Where to put our output
+    var outputContainer = document.getElementById("repos");
+
+    // Add the once-only location variable.
+    // (We don't want this repeating with every 'Generate'.)
+    outputContainer.innerHTML += "location=$(pwd)\n";
+
     // Make the entity directory if it doesn't exist.
-    outputContainer.innerHTML += "mkdir -p " + data[0].owner.login + "<br>";
-    data.forEach(function (data) {
+    var repoNumber;
+    outputContainer.innerHTML += "mkdir -p " + repoData[0].owner.login + "<br>";
+    repoData.forEach(function (data, index) {
+        repoNumber = index + 1;
+        outputContainer.innerHTML += "# " + repoNumber + "\n";
         outputContainer.innerHTML += "cd " + data.owner.login + "\n";
         outputContainer.innerHTML += "git clone git@github.com:" + data.full_name + ".git";
         outputContainer.innerHTML += " || echo 'The " + data.name + " folder exists. Updating.'\n";
@@ -44,16 +50,26 @@ function getJSON(url, callback) {
     xhr.send();
 }
 
-// The main function
-function generate() {
+// Populate the array of repo data, and
+// put a list of repos in the console for reference
+function listRepos(data, status) {
+    'use strict';
+    console.log(status);
+    data.forEach(function (dataEntry) {
+        repoData.push(dataEntry);
+    });
+    console.log(repoData);
+    generateScript();
+    // to do: prevent duplicates from multiple pages
+}
+
+function searchURL(page) {
     'use strict';
 
-    // Where to put our output
-    var outputContainer = document.getElementById("repos");
-
-    // Add the once-only location variable.
-    // (We don't want this repeating with every 'Generate'.)
-    outputContainer.innerHTML += "location=$(pwd)\n";
+    // Create a fallback for a missing page value
+    if (page === 'undefined') {
+        page = 1;
+    }
 
     // Get the API token
     var token = document.getElementById("apitoken").value;
@@ -63,20 +79,66 @@ function generate() {
     var url, entity;
     if (document.getElementById("select-organisation").checked && document.getElementById("input-organisation").value) {
         entity = document.getElementById("input-organisation").value;
-        url = "https://api.github.com/orgs/" + entity + "/repos?per_page=100&access_token=" + token;
+        url = "https://api.github.com/orgs/" + entity + "/repos?per_page=100&access_token=" + token + '&page=' + page;
     } else if (document.getElementById("select-user").checked && document.getElementById("input-user").value) {
         entity = document.getElementById("input-user").value;
-        url = "https://api.github.com/users/" + entity + "/repos?per_page=100&access_token=" + token;
+        url = "https://api.github.com/users/" + entity + "/repos?per_page=100&access_token=" + token + '&page=' + page;
     }
+    return url;
+}
 
+// Iterate for each page of repos
+function reposByPage(numberOfPages) {
+    'use strict';
     // Call the getJSON function, and if there are no errors
-    // then call the functions that list the repos.
-    getJSON(url, function (err, data) {
+    // then list the repos.
+    var pageNumber;
+    for (pageNumber = 1; pageNumber <= numberOfPages; pageNumber += 1) {
+        getJSON(searchURL(pageNumber), function (err, data) {
+            if (err !== null) {
+                console.log("Something went wrong: " + err);
+            } else {
+                listRepos(data);
+            }
+        });
+    }
+}
+
+// Get the number of pages from the search request
+function getPages(url, callback) {
+    'use strict';
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.responseType = "json";
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onload = function () {
+        var status = xhr.status;
+        if (status === 200) {
+            var pages, pagesString, linkHeader;
+            if (xhr.getResponseHeader('Link')) {
+                linkHeader = xhr.getResponseHeader('Link');
+                pagesString = linkHeader.match(/&page=(\d+).*$/)[1];
+                pages = parseInt(pagesString);
+            } else {
+                pages = 1;
+            }
+            callback(null, pages);
+        } else {
+            callback(status, xhr.response);
+        }
+    };
+    xhr.send();
+}
+
+// The main function
+function generate() {
+    'use strict';
+
+    getPages(searchURL(), function (err, data) {
         if (err !== null) {
             console.log("Something went wrong: " + err);
         } else {
-            listRepos(data);
-            generateScript(data, outputContainer);
+            reposByPage(data);
         }
     });
 }
@@ -86,6 +148,9 @@ function clearOutput() {
     'use strict';
     var outputWrapper = document.getElementById("output-wrapper");
     outputWrapper.innerHTML = "<pre id='repos'></pre>";
+
+    // Empty the array of repo data, too
+    repoData = [];
 }
 
 // Listen for 'Enter' in the form
