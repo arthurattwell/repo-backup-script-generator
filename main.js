@@ -11,15 +11,29 @@ function generateScript() {
     // Where to put our output
     var outputContainer = document.getElementById("repos");
 
+    // Clear the current, visible output
+    outputContainer.innerHTML = '';
+
     // Add the once-only location variable.
     // (We don't want this repeating with every 'Generate'.)
     outputContainer.innerHTML += "location=$(pwd)\n";
 
     // Make the entity directory if it doesn't exist.
     var repoNumber;
-    outputContainer.innerHTML += "mkdir -p " + repoData[0].owner.login + "<br>";
+    var currentRepoOwner = repoData[0].owner.login;
+    outputContainer.innerHTML += "mkdir -p " + currentRepoOwner + "<br>";
     repoData.forEach(function (data, index) {
+
+        // If we're adding a new repo owner's repos,
+        // create a directory for them.
+        if (currentRepoOwner !== data.owner.login) {
+            currentRepoOwner = data.owner.login;
+            outputContainer.innerHTML += "\n";
+            outputContainer.innerHTML += "mkdir -p " + currentRepoOwner + "<br>";
+        }
+
         repoNumber = index + 1;
+        outputContainer.innerHTML += "\n";
         outputContainer.innerHTML += "# " + repoNumber + "\n";
         outputContainer.innerHTML += "cd " + data.owner.login + "\n";
         outputContainer.innerHTML += "git clone git@github.com:" + data.full_name + ".git";
@@ -52,60 +66,70 @@ function getJSON(url, callback) {
 
 // Populate the array of repo data, and
 // put a list of repos in the console for reference
-function listRepos(data, status) {
+function listRepos(data) {
     'use strict';
-    console.log(status);
     data.forEach(function (dataEntry) {
         repoData.push(dataEntry);
     });
-    console.log(repoData);
     generateScript();
-    // to do: prevent duplicates from multiple pages
 }
 
+// Return an API search URL based on user input
 function searchURL(page) {
     'use strict';
 
-    // Create a fallback for a missing page value
+    // Since this function may be used in a loop for each page of results,
+    // also create a fallback in the event there is no page value
     if (page === 'undefined') {
         page = 1;
     }
 
     // Get the API token
-    var token = document.getElementById("apitoken").value;
+    var token = document.getElementById('apitoken').value;
 
     // Check whether we're fetching org or user repos,
     // and construct a URL accordingly
     var url, entity;
-    if (document.getElementById("select-organisation").checked && document.getElementById("input-organisation").value) {
-        entity = document.getElementById("input-organisation").value;
-        url = "https://api.github.com/orgs/" + entity + "/repos?per_page=100&access_token=" + token + '&page=' + page;
-    } else if (document.getElementById("select-user").checked && document.getElementById("input-user").value) {
-        entity = document.getElementById("input-user").value;
-        url = "https://api.github.com/users/" + entity + "/repos?per_page=100&access_token=" + token + '&page=' + page;
+    if (document.getElementById('select-organisation').checked && document.getElementById('input-organisation').value) {
+        entity = document.getElementById('input-organisation').value;
+        url = 'https://api.github.com/orgs/' + entity + '/repos?per_page=100&access_token=' + token + '&page=' + page;
+    } else if (document.getElementById('select-user').checked && document.getElementById('input-user').value) {
+        entity = document.getElementById('input-user').value;
+        url = 'https://api.github.com/users/' + entity + '/repos?per_page=100&access_token=' + token + '&page=' + page;
     }
+
+    // Return the URL
     return url;
 }
 
 // Iterate for each page of repos
 function reposByPage(numberOfPages) {
     'use strict';
+
     // Call the getJSON function, and if there are no errors
     // then list the repos.
-    var pageNumber;
+    var pageNumber = 1;
+    var pagesReceived = 0;
+    var dataReceived = [];
     for (pageNumber = 1; pageNumber <= numberOfPages; pageNumber += 1) {
         getJSON(searchURL(pageNumber), function (err, data) {
             if (err !== null) {
                 console.log("Something went wrong: " + err);
             } else {
-                listRepos(data);
+                pagesReceived += 1;
+                data.forEach(function (entry) {
+                    dataReceived.push(entry);
+                });
+                if (pagesReceived === numberOfPages) {
+                    listRepos(dataReceived);
+                }
             }
         });
     }
 }
 
 // Get the number of pages from the search request
-function getPages(url, callback) {
+function getNumberOfPages(url, callback) {
     'use strict';
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
@@ -134,9 +158,9 @@ function getPages(url, callback) {
 function generate() {
     'use strict';
 
-    getPages(searchURL(), function (err, data) {
+    getNumberOfPages(searchURL(), function (err, data) {
         if (err !== null) {
-            console.log("Something went wrong: " + err);
+            console.log("Something went wrong getting the number of pages: " + err);
         } else {
             reposByPage(data);
         }
