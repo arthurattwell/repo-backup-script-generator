@@ -49,10 +49,15 @@ function generateScript() {
 // Get the JSON data over https
 function getJSON(url, callback) {
     'use strict';
+
+    // Get the API token
+    var token = document.getElementById('apitoken').value;
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.responseType = "json";
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("Authorization", "token " + token);
     xhr.onload = function () {
         var status = xhr.status;
         if (status === 200) {
@@ -80,22 +85,19 @@ function searchURL(page) {
 
     // Since this function may be used in a loop for each page of results,
     // also create a fallback in the event there is no page value
-    if (page === 'undefined') {
+    if (!page) {
         page = 1;
     }
-
-    // Get the API token
-    var token = document.getElementById('apitoken').value;
 
     // Check whether we're fetching org or user repos,
     // and construct a URL accordingly
     var url, entity;
     if (document.getElementById('select-organisation').checked && document.getElementById('input-organisation').value) {
         entity = document.getElementById('input-organisation').value;
-        url = 'https://api.github.com/orgs/' + entity + '/repos?per_page=100&access_token=' + token + '&page=' + page;
+        url = 'https://api.github.com/orgs/' + entity + '/repos?type=all&per_page=100&page=' + page;
     } else if (document.getElementById('select-user').checked && document.getElementById('input-user').value) {
         entity = document.getElementById('input-user').value;
-        url = 'https://api.github.com/users/' + entity + '/repos?per_page=100&access_token=' + token + '&page=' + page;
+        url = 'https://api.github.com/users/' + entity + '/repos?type=all&per_page=100&page=' + page;
     }
 
     // Return the URL
@@ -131,10 +133,15 @@ function reposByPage(numberOfPages) {
 // Get the number of pages from the search request
 function getNumberOfPages(url, callback) {
     'use strict';
+
+    // Get the API token
+    var token = document.getElementById('apitoken').value;
+
     var xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.responseType = "json";
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("Authorization", "token " + token);
     xhr.onload = function () {
         var status = xhr.status;
         if (status === 200) {
