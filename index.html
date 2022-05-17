@@ -19,18 +19,16 @@
 
     <p><strong>This page generates a shell script that clones all your repos in one go.</strong> If a repo already exists, it will just pull the latest changes from the default branch.</p>
 
-    <p>Note: currently, the generated shell script only works on Mac and Linux for GitHub repos and <a href="https://github.com/arthurattwell/myrepos-setup/issues/1">up to 100 repos</a> per user or organisation.</p>
-
     <h2>Usage</h2>
 
     <ol>
         <li><a href="https://help.github.com/articles/connecting-to-github-with-ssh/">Set yourself up to connect to GitHub with ssh automatically</a>.</li>
-        <li>To get your organisation's repos, enter its GitHub name below. To get your personal repos, enter your GitHub username.</li>
-        <li>If you want to include private repos, you'll need a GitHub <a href="https://github.com/settings/tokens">Personal API token</a> with full <code>repo</code> scope. This site does nothing with your API token except use it in your browser directly to fetch your repo listing. (You can <a href="https://github.com/arthurattwell/myrepos-setup/">check the code yourself</a> to make sure.) Only use this site over https for security, and delete your token on GitHub once you no longer need it.</li>
+        <li>To get your organisation's repos, enter its GitHub name below. To get your personal repos, select 'User' and enter your GitHub username.</li>
+        <li>If you want to include private repos, you'll need a GitHub <a href="https://github.com/settings/tokens">Personal API token</a> with full <code>repo</code> scope. This site does nothing with your API token except use it in your browser directly to fetch your repo listing. (You can <a href="https://github.com/arthurattwell/repo-backup-script-generator">check the code yourself</a> to make sure.) Only use this site over https for security, and delete your token on GitHub once you no longer need it.</li>
         <li>Click 'Generate'.</li>
         <li>To add another organisation's or user's repos to the same script, add their details to the form and click 'Generate' again.</li>
         <li>Copy and paste the text into a <code>.sh</code> file.</li>
-        <li>Run that file where you store your repos. They will be cloned there in organisation folders.</li>
+        <li>Run that script where you store your repos. They will be cloned there in organisation folders.</li>
     </ol>
 
     <h2>Suggestions?</h2>
